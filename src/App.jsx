@@ -4,15 +4,8 @@ import { Moon, Sun } from "lucide-react";
 import { useContext } from "react";
 import { ThemeContext } from "./utils/Theme/ThemeContext";
 import "./App.css";
-
-const donutData = [
-	{ name: "Luke", donuts: 2, croissants: 5 },
-	{ name: "Cal", donuts: 6, croissants: 4 },
-	{ name: "Jordan", donuts: 3, croissants: 6 },
-	{ name: "Chris", donuts: 0, croissants: 2 },
-	{ name: "Jamie", donuts: 1, croissants: 3 },
-	{ name: "Feargus", donuts: 0, croissants: 1 },
-];
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 function mapNumberToEmojis(number, isCroissant = false) {
 	if (typeof number !== "number" || number < 0) {
@@ -25,6 +18,13 @@ function mapNumberToEmojis(number, isCroissant = false) {
 
 function App() {
 	const { selectedTheme, updateTheme } = useContext(ThemeContext);
+	const { data: donutData } = useQuery({
+		queryKey: ["DonutData"],
+		queryFn: async () => {
+			const res = await axios.get("https://bagginsdonutsapi-fa.azurewebsites.net/api/GetDonutInfo?code=316AajT8wIoy5TjKyjOEeq4Up_VOyfvug1fRcfma5MDwAzFuPvHVMw==");
+			return res.data;
+		},
+	});
 	return (
 		<main className='mainContent'>
 			<div className='header'>
@@ -34,20 +34,26 @@ function App() {
 			<div className='table'>
 				<Table aria-describedby='donutTable' aria-label='donutTable'>
 					<TableHeader>
-						<Column className={"columnHeader"} isRowHeader>
+						<Column style={{ paddingRight: "16px" }} className={"columnHeader"} isRowHeader>
 							Name
 						</Column>
-						<Column className={"columnHeader"}>Donuts</Column>
+						<Column className={"columnHeader"} style={{ paddingRight: "16px" }}>
+							Donuts
+						</Column>
 						<Column className={"columnHeader"}>Croissants</Column>
 					</TableHeader>
 					<TableBody>
-						{donutData?.map((d, i) => (
-							<Row key={i}>
-								<Cell className={"tableCellName"}>{d?.name}</Cell>
-								<Cell className={"tableCell"}>{mapNumberToEmojis(d?.donuts)}</Cell>
-								<Cell className={"tableCell"}>{mapNumberToEmojis(d?.croissants, true)}</Cell>
-							</Row>
-						))}
+						{donutData?.map((d, i) => {
+							return (
+								<Row key={i}>
+									<Cell className={"tableCellName"}>{d?.name}</Cell>
+									<Cell style={{ paddingRight: "16px" }} className={"tableCell"}>
+										{mapNumberToEmojis(d?.donuts)}
+									</Cell>
+									<Cell className={"tableCell"}>{mapNumberToEmojis(d?.croissants, true)}</Cell>
+								</Row>
+							);
+						})}
 					</TableBody>
 				</Table>
 			</div>
