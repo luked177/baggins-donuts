@@ -1,0 +1,19 @@
+.lightDonut{
+    --background: #F5F5F5;
+    --foreground: rgba(0,0,0,0.8);
+}
+
+.darkDonut{
+    --background: #141414;
+    --foreground: rgba(255,255,255,1);
+}
+
+html, body, #root{
+    margin: 0;
+    height: 100vh;
+}
+
+* {
+    font-family: 'Courier New', Courier, monospace;
+    box-sizing: border-box;
+}
