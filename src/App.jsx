@@ -6,6 +6,7 @@ import { ThemeContext } from "./utils/Theme/ThemeContext";
 import "./App.css";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { FallingDonuts } from "./FallingDonuts/FallingDonuts";
 
 function mapNumberToEmojis(number, isCroissant = false) {
 	if (typeof number !== "number" || number < 0) {
@@ -31,6 +32,7 @@ function App() {
 				<span className='headerText'>Baggins D🍩nuts</span>
 				{selectedTheme === Themes.Light ? <Sun className='headerIcon' onClick={() => updateTheme(Themes.Dark)} /> : <Moon className='headerIcon' onClick={() => updateTheme(Themes.Light)} />}
 			</div>
+			<FallingDonuts />
 			<div className='table'>
 				<Table aria-describedby='donutTable' aria-label='donutTable'>
 					<TableHeader>
