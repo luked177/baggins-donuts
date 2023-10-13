@@ -1,24 +1,19 @@
 import { Cell, Column, Row, Table, TableBody, TableHeader } from "react-aria-components";
 import { Themes } from "./utils/Theme/ThemeHelper";
 import { Moon, Sun } from "lucide-react";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { ThemeContext } from "./utils/Theme/ThemeContext";
 import "./App.css";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { FallingDonuts } from "./FallingDonuts/FallingDonuts";
-
-function mapNumberToEmojis(number, isCroissant = false) {
-	if (typeof number !== "number" || number < 0) {
-		return "Input is not a valid non-negative number.";
-	}
-	const emoji = isCroissant ? "🥐" : "🍩";
-	const emojisArray = new Array(number).fill(emoji);
-	return emojisArray.join("");
-}
+import dayjs from "dayjs";
 
 function App() {
 	const { selectedTheme, updateTheme } = useContext(ThemeContext);
+	const [modal, setModal] = useState(false);
+	const [modalDetails, setModalDetails] = useState({ awardedTo: null, awardedDate: null, awardedReason: null });
+
 	const { data: donutData } = useQuery({
 		queryKey: ["DonutData"],
 		queryFn: async () => {
@@ -26,8 +21,22 @@ function App() {
 			return res.data;
 		},
 	});
+
+	function mapNumberToEmojis(awardArray, isCroissant = false, name) {
+		const emoji = isCroissant ? "🥐" : "🍩";
+		return awardArray?.map((a) => (
+			<span
+				style={{ cursor: "pointer" }}
+				key={a?.awardId}
+				onClick={() => setModal(true) + setModalDetails({ awardedDate: dayjs(a?.awardedDate).format("DD/MM/YYYY"), awardedTo: name, awardedReason: a?.awardedReason })}
+			>
+				{emoji}
+			</span>
+		));
+	}
+
 	return (
-		<main className='mainContent'>
+		<main className='mainContent' onClick={() => modal && setModal(false)}>
 			<div className='header'>
 				<span className='headerText'>Baggins D🍩nuts</span>
 				{selectedTheme === Themes.Light ? <Sun className='headerIcon' onClick={() => updateTheme(Themes.Dark)} /> : <Moon className='headerIcon' onClick={() => updateTheme(Themes.Light)} />}
@@ -50,15 +59,24 @@ function App() {
 								<Row key={i}>
 									<Cell className={"tableCellName"}>{d?.name}</Cell>
 									<Cell style={{ paddingRight: "16px" }} className={"tableCell"}>
-										{mapNumberToEmojis(d?.donuts)}
+										{mapNumberToEmojis(d?.donuts, false, d?.name)}
 									</Cell>
-									<Cell className={"tableCell"}>{mapNumberToEmojis(d?.croissants, true)}</Cell>
+									<Cell className={"tableCell"}>{mapNumberToEmojis(d?.croissants, true, d?.name)}</Cell>
 								</Row>
 							);
 						})}
 					</TableBody>
 				</Table>
 			</div>
+			{modal && (
+				<div id='myModal' className='modal'>
+					<div className='modal-content'>
+						<p>Awarded to: {modalDetails?.awardedTo}</p>
+						<p>Date: {modalDetails?.awardedDate}</p>
+						<p>Reason: {modalDetails?.awardedReason}</p>
+					</div>
+				</div>
+			)}
 		</main>
 	);
 }
