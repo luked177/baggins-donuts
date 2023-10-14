@@ -38,7 +38,9 @@ function App() {
 	return (
 		<main className='mainContent' onClick={() => modal && setModal(false)}>
 			<div className='header'>
-				<span className='headerText'>Baggins D🍩nuts</span>
+				<span className='headerText'>
+					Baggins D<span style={{ fontSize: "19px" }}>🍩</span>nuts
+				</span>
 				{selectedTheme === Themes.Light ? <Sun className='headerIcon' onClick={() => updateTheme(Themes.Dark)} /> : <Moon className='headerIcon' onClick={() => updateTheme(Themes.Light)} />}
 			</div>
 			<FallingDonuts />
