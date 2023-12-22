@@ -18,6 +18,7 @@ function App() {
 		queryKey: ["DonutData"],
 		queryFn: async () => {
 			const res = await axios.get("https://bagginsdonutsapi-fa.azurewebsites.net/api/GetDonutInfo?code=316AajT8wIoy5TjKyjOEeq4Up_VOyfvug1fRcfma5MDwAzFuPvHVMw==");
+			// const res = await axios.get("http://localhost:7199/api/GetDonutInfo");
 			return res.data;
 		},
 	});
@@ -30,7 +31,7 @@ function App() {
 				key={a?.awardId}
 				onClick={() => setModal(true) + setModalDetails({ awardedDate: dayjs(a?.awardedDate).format("DD/MM/YYYY"), awardedTo: name, awardedReason: a?.awardedReason })}
 			>
-				{emoji}
+				{a.isChristmas ? "🍪" : emoji}
 			</span>
 		));
 	}
