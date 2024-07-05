@@ -1,24 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Cell, Column, Row, Table, TableBody, TableHeader } from "react-aria-components";
 import "../App.css";
+import { DonutInfo } from "./donutInfo";
 
 // eslint-disable-next-line react/prop-types
 export const DonutsTable = () => {
     const [modal, setModal] = useState(false);
     const [modalDetails, setModalDetails] = useState({ awardedTo: null, awardedDate: null, awardedReason: null });
-
-	useEffect(() => {
-        const closeOnOutsideClick = (e) => {
-            const modalEl = document.getElementById("myModal")
-            const hasClickedOutside = modalEl && !modalEl.contains(e.target)
-            hasClickedOutside && setModal(false)
-        }
-        document.addEventListener('click', closeOnOutsideClick)
-        return () => document.removeEventListener('click', closeOnOutsideClick)
-    }, [])
 
     const { data: donutData } = useQuery({
 		queryKey: ["DonutData"],
@@ -35,7 +26,7 @@ export const DonutsTable = () => {
 			<span
 				style={{ cursor: "pointer" }}
 				key={a?.awardId}
-				onClick={(e) => e.stopPropagation() + setModal(true) + setModalDetails({ awardedDate: dayjs(a?.awardedDate).format("DD/MM/YYYY"), awardedTo: name, awardedReason: a?.awardedReason })}
+				onClick={(e) => e.stopPropagation() + setModal(true) + setModalDetails([{ awardedDate: dayjs(a?.awardedDate).format("DD/MM/YYYY"), awardedTo: name, awardedReason: a?.awardedReason }])}
 			>
 				{a.isChristmas ? "🍪" : emoji}
 			</span>
@@ -60,7 +51,19 @@ export const DonutsTable = () => {
 							return (
 								<Row key={i}>
 									<Cell className={"tableCellName"}>{d?.name}</Cell>
-									<Cell style={{ paddingRight: "16px" }} className={"tableCell"}>
+									<Cell style={{ paddingRight: "16px", display: 'flex' }} className={"tableCell"}>
+										{Array.from({length: d.archivedBoxes.length}).map((_,i) => {
+											const donuts = d.archivedBoxes[i].donuts.map(a => ({ awardedDate: dayjs(a?.awardedDate).format("DD/MM/YYYY"), awardedTo: d?.name, awardedReason: a?.awardedReason }))
+
+											return <img style={{height: '32px', width: '32px', cursor: 'pointer'}} src="./archiveDonuts.png" alt="archive donuts box" key={`archiveBox-${i}`} 
+											onClick={(e) => {
+												e.stopPropagation()
+												setModal(true)
+												setModalDetails(donuts)
+											
+											}
+											} />
+											})}
 										{mapNumberToEmojis(d?.donuts, false, d?.name)}
 									</Cell>
 									<Cell className={"tableCell"}>{mapNumberToEmojis(d?.croissants, true, d?.name)}</Cell>
@@ -72,13 +75,7 @@ export const DonutsTable = () => {
 				</Table>
 			</div>
 			{modal && (
-				<div className='modal'>
-					<div id='myModal' className='modal-content'>
-						<p>Awarded to: {modalDetails?.awardedTo}</p>
-						<p>Date: {modalDetails?.awardedDate}</p>
-						<p>Reason: {modalDetails?.awardedReason}</p>
-					</div>
-				</div>
+				<DonutInfo modalDetails={modalDetails} setModal={setModal} />
 			)}
             </>
     )

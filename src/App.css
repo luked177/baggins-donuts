@@ -84,6 +84,17 @@
     animation-duration: 0.4s;
     border-radius: 12px;
     padding: 16px;
+    display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+    
+    .modal-item {
+        border-bottom: 1px solid var(--foreground);
+    }
+    
+    .modal-item:last-child {
+        border: none;
   }
   
   @-webkit-keyframes animatetop {
