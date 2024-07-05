@@ -109,6 +109,7 @@
       background-color: transparent;
       margin-top: 16px;
       font-size: 20px;
+    color: var(--foreground);
   }
 
   .headerLink {
