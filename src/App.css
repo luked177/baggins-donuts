@@ -55,6 +55,7 @@
     width: 10%;
     text-align: center;
     font-size: 24px;
+    white-space: nowrap;
 }
 
 .modal {
@@ -95,3 +96,27 @@
     to {top:0; opacity:1}
   }
  
+  .scoreCell {
+      display: flex;
+      margin: auto;
+  }
+
+  .suggestTitle {
+      text-decoration: underline;
+      cursor: pointer;
+      z-index: 10;
+      border: none;
+      background-color: transparent;
+      margin-top: 16px;
+      font-size: 20px;
+  }
+
+  .headerLink {
+      font-size: 24px;
+      color: var(--foreground);
+      text-decoration: none;
+
+      &:hover {
+          text-decoration: underline;
+      }
+  }

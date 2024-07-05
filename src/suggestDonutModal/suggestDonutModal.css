@@ -1,0 +1,13 @@
+.suggestDonutTitle {
+    text-align: center;
+}
+
+.suggestItem {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.suggestButton {
+    margin-top: 1em;
+}
