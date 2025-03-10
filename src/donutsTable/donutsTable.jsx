@@ -28,7 +28,7 @@ export const DonutsTable = () => {
 				key={a?.awardId}
 				onClick={(e) => e.stopPropagation() + setModal(true) + setModalDetails([{ awardedDate: dayjs(a?.awardedDate).format("DD/MM/YYYY"), awardedTo: name, awardedReason: a?.awardedReason }])}
 			>
-				{a.isChristmas ? "🍪" : emoji}
+				{a.isChristmas && !isCroissant ? "🍪" : emoji}
 			</span>
 		));
 	}
